@@ -15,14 +15,6 @@ import StatusPage from "./StatusPage";
 import CallsPage from "./CallsPage";
 import * as firebase from "firebase";
 
-const FirstRoute = () => (
-  <View style={[styles.scene, { backgroundColor: "#fff" }]} />
-);
-
-const SecondRoute = () => (
-  <View style={[styles.scene, { backgroundColor: "#fff" }]} />
-);
-
 export default class HomePage extends React.Component {
   constructor(props) {
     super(props);
