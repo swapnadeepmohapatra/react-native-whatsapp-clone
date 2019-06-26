@@ -8,8 +8,9 @@ import {
   Dimensions,
   TouchableOpacity
 } from "react-native";
+import { connect } from "react-redux";
 
-export default class UserChatItem extends Component {
+class UserChatItem extends Component {
   constructor(props) {
     super(props);
     self = this;
@@ -34,7 +35,7 @@ export default class UserChatItem extends Component {
         />
         <TouchableOpacity
           onPress={() => {
-            this.props.navigation.navigate("Signup");
+            this.props.pgChange();
           }}
         >
           <View style={{ flexDirection: "column" }}>
@@ -76,3 +77,31 @@ const styles = StyleSheet.create({
     marginVertical: 5
   }
 });
+
+function mapStateToProps(state) {
+  return {
+    myCounter: state.myCounter
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    incCounter: () =>
+      dispatch({
+        type: "INC_COUNTER"
+      }),
+    decCounter: () =>
+      dispatch({
+        type: "DEC_COUNTER"
+      }),
+    pgChange: () =>
+      dispatch({
+        type: "PG_CHANGE"
+      })
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UserChatItem);
