@@ -8,7 +8,7 @@ import {
   Dimensions,
   TouchableOpacity
 } from "react-native";
-import { connect } from "react-redux";
+import { withNavigation } from "react-navigation";
 
 class UserChatItem extends Component {
   constructor(props) {
@@ -17,7 +17,11 @@ class UserChatItem extends Component {
   }
 
   openChat = () => {
-    self.props.navigation.replace("PrivateChat");
+    self.props.navigation.navigate("PrivateChat", {
+      name: this.props.name.name,
+      image: this.props.name.profilePic,
+      uid: this.props.name.uid
+    });
     // alert("done");
   };
 
@@ -35,7 +39,7 @@ class UserChatItem extends Component {
         />
         <TouchableOpacity
           onPress={() => {
-            this.props.pgChange();
+            this.openChat();
           }}
         >
           <View style={{ flexDirection: "column" }}>
@@ -78,30 +82,4 @@ const styles = StyleSheet.create({
   }
 });
 
-function mapStateToProps(state) {
-  return {
-    myCounter: state.myCounter
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    incCounter: () =>
-      dispatch({
-        type: "INC_COUNTER"
-      }),
-    decCounter: () =>
-      dispatch({
-        type: "DEC_COUNTER"
-      }),
-    pgChange: () =>
-      dispatch({
-        type: "PG_CHANGE"
-      })
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserChatItem);
+export default withNavigation(UserChatItem);

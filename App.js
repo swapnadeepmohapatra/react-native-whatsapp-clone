@@ -5,37 +5,6 @@ import * as firebase from "firebase";
 import SignInPage from "./screens/SignInPage";
 import SignUpPage from "./screens/SignUpPage";
 import PrivateChatPage from "./screens/PrivateChatPage";
-import { createStore } from "redux";
-import { Provider } from "react-redux";
-import React from "react";
-
-const initState = {
-  myCounter: 0
-};
-
-const reducer = (state = initState, action) => {
-  switch (action.type) {
-    case "INC_COUNTER":
-      return { myCounter: state.myCounter + 1 };
-    case "DEC_COUNTER":
-      if (state.myCounter >= 1) {
-        return { myCounter: state.myCounter - 1 };
-      } else {
-        return state;
-      }
-    case "PG_CHANGE":
-      this.props.navigation.navigate("PrivateChatPage");
-  }
-  return state;
-};
-
-const FirstRoute = () => (
-  <Provider store={store}>
-    <HomePage />
-  </Provider>
-);
-
-const store = createStore(reducer);
 
 var firebaseConfig = {
   apiKey: "AIzaSyA3IiXHr_8bmSO2LSsq4N48gkmZzAuxGRM",
@@ -50,7 +19,7 @@ firebase.initializeApp(firebaseConfig);
 
 const MainNavigator = createStackNavigator(
   {
-    Home: { screen: FirstRoute },
+    Home: { screen: HomePage },
     Loading: { screen: LoadingPage },
     Signin: { screen: SignInPage },
     Signup: { screen: SignUpPage },
@@ -58,10 +27,10 @@ const MainNavigator = createStackNavigator(
   },
   {
     // initialRouteName: "PrivateChat"
-    initialRouteName: "Loading",
-    defaultNavigationOptions: {
-      header: null
-    }
+    initialRouteName: "Loading"
+    // defaultNavigationOptions: {
+    //   header: null
+    // }
   }
 );
 

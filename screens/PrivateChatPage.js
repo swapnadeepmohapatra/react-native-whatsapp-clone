@@ -1,16 +1,24 @@
 import React from "react";
-import { StyleSheet, View, StatusBar, Image } from "react-native";
+import {
+  StyleSheet,
+  View,
+  StatusBar,
+  Image,
+  KeyboardAvoidingView
+} from "react-native";
 import { Input, Card, Button, Icon, Text } from "native-base";
+import * as firebase from "firebase";
+import { FlatList } from "react-native-gesture-handler";
 
 export default class PrivateChatPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { name: "Hello", message: "", messageList: [] };
     self = this;
   }
 
   static navigationOptions = {
-    // header: null,
+    header: null,
     title: "Swapnadeep Mohapatra",
     headerStyle: {
       backgroundColor: "#075E54"
@@ -18,42 +26,121 @@ export default class PrivateChatPage extends React.Component {
     headerTintColor: "#fff",
     headerTitleStyle: {
       fontWeight: "bold"
-    },
-    headerTitle: (
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Image
-          source={{
-            uri:
-              "data:image/jpeg;base64,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"
-          }}
-          style={{ height: 50, width: 50, borderRadius: 50 }}
-        />
-        <Text style={{ color: "#fff", fontSize: 20, marginLeft: 10 }}>
-          Swapnadeep
-        </Text>
-      </View>
-    )
+    }
+  };
+
+  updateList = messageList => {
+    this.setState({ messageList: messageList });
+  };
+  componentDidMount() {
+    this.setState({ name: this.props.navigation.getParam("name", "NO-ID") });
+    var messageListRef = firebase
+      .database()
+      .ref("message_list")
+      .child(firebase.auth().currentUser.uid)
+      .child(this.props.navigation.getParam("uid", "000"));
+    messageListRef.on("value", dataSnapshot => {
+      if (dataSnapshot.val()) {
+        let messageList = Object.values(dataSnapshot.val());
+        self.updateList(messageList.reverse());
+      }
+    });
+    this.forceUpdate();
+  }
+
+  sendMessage = message => {
+    var messageListRef = firebase
+      .database()
+      .ref("message_list")
+      .child(firebase.auth().currentUser.uid)
+      .child(this.props.navigation.getParam("uid", "000"));
+    var newMessageRef = messageListRef.push();
+    newMessageRef.set({
+      text: message,
+      time: Date.now(),
+      uid: this.props.navigation.getParam("uid", "000"),
+      name: this.props.navigation.getParam("name", "aaa")
+    });
+    this.setState({
+      message: " "
+    });
+    this.forceUpdate();
   };
 
   render() {
     return (
-      <View
-        style={{
-          backgroundColor: "#ECE5DD",
-          //   backgroundColor: "#EA7773",
-          flex: 1
-        }}
-      >
-        <View style={styles.inputContainer}>
-          <Input placeholder="Enter Message" />
-          <Button style={{ backgroundColor: "#128C7E" }} rounded icon>
-            <Icon name="send" />
-          </Button>
+      <View style={{ flex: 1 }}>
+        <View
+          backgroundColor="#128C7E"
+          style={{
+            height: StatusBar.currentHeight
+          }}
+        />
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: "#075E54",
+            paddingVertical: 5
+          }}
+        >
+          <Image
+            source={{
+              uri: this.props.navigation.getParam("image", "Nothing")
+            }}
+            style={{ height: 50, width: 50, borderRadius: 50 }}
+          />
+          <Text style={{ color: "#fff", fontSize: 20, marginLeft: 10 }}>
+            {this.props.navigation.getParam("name", "Nothing")}
+          </Text>
         </View>
+        <KeyboardAvoidingView
+          style={{
+            backgroundColor: "#ECE5DD",
+            //   backgroundColor: "#EA7773",
+            flex: 1
+          }}
+          behavior="padding"
+          enabled
+        >
+          <FlatList
+            data={this.state.messageList}
+            inverted
+            keyExtractor={(item, index) => item.time.toString()}
+            renderItem={({ item }) => (
+              <Card style={styles.listItem}>
+                <Text style={styles.messageText}>{item.text}</Text>
+                <Text style={styles.timeText}>
+                  {new Date(item.time).toLocaleDateString()}
+                </Text>
+              </Card>
+            )}
+          />
+          <View style={styles.inputContainer}>
+            <Input
+              placeholder="Enter Message"
+              onChangeText={text => {
+                this.setState({ message: text });
+              }}
+              value={this.state.message}
+            />
+            <Button
+              style={{ backgroundColor: "#128C7E" }}
+              rounded
+              icon
+              onPress={() => {
+                this.sendMessage(this.state.message);
+              }}
+            >
+              <Icon name="send" />
+            </Button>
+          </View>
+        </KeyboardAvoidingView>
       </View>
     );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -67,9 +154,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderColor: "#fff",
     color: "#fff",
-    position: "absolute",
-    bottom: 5,
+    // position: "absolute",
+    // bottom: 5,
     backgroundColor: "#fff",
     marginHorizontal: 10
+  },
+  listItem: {
+    padding: 10
+  },
+  messageText: {
+    fontSize: 20
+  },
+  timeText: {
+    fontSize: 10
   }
 });
