@@ -26,7 +26,7 @@ export default class HomePage extends React.Component {
         { key: "third", title: "CALLS" }
       ]
     };
-    self = this;
+    // self = this;
   }
 
   static navigationOptions = {
@@ -77,14 +77,18 @@ export default class HomePage extends React.Component {
             <TouchableOpacity>
               <Icon name="search" size={27} style={styles.icons} />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                this.showMenu();
-              }}
+            <Menu
+              ref={this.setMenuRef}
+              button={
+                <TouchableOpacity
+                  onPress={() => {
+                    this.showMenu();
+                  }}
+                >
+                  <Icon name="more-vert" size={27} style={styles.icons} />
+                </TouchableOpacity>
+              }
             >
-              <Icon name="more-vert" size={27} style={styles.icons} />
-            </TouchableOpacity>
-            <Menu ref={this.setMenuRef}>
               <MenuItem
                 onPress={() => {
                   this.props.navigation.navigate("PrivateChat");
@@ -92,7 +96,13 @@ export default class HomePage extends React.Component {
               >
                 New Group
               </MenuItem>
-              <MenuItem onPress={this.hideMenu}>Settings</MenuItem>
+              <MenuItem
+                onPress={() => {
+                  this.props.navigation.navigate("Settings");
+                }}
+              >
+                Settings
+              </MenuItem>
               <MenuDivider />
               <MenuItem onPress={this.logout}>Logout</MenuItem>
             </Menu>

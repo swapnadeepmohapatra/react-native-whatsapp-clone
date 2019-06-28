@@ -4,11 +4,14 @@ import {
   View,
   StatusBar,
   Image,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  TouchableOpacity
 } from "react-native";
 import { Input, Card, Button, Icon, Text } from "native-base";
 import * as firebase from "firebase";
 import { FlatList } from "react-native-gesture-handler";
+import SenderMessage from "../components/SenderMessage";
+import ReceiverMessage from "../components/ReceiverMessage";
 
 export default class PrivateChatPage extends React.Component {
   constructor(props) {
@@ -49,20 +52,40 @@ export default class PrivateChatPage extends React.Component {
   }
 
   sendMessage = message => {
-    var messageListRef = firebase
-      .database()
-      .ref("message_list")
-      .child(firebase.auth().currentUser.uid)
-      .child(this.props.navigation.getParam("uid", "000"));
-    var newMessageRef = messageListRef.push();
-    newMessageRef.set({
-      text: message,
-      time: Date.now(),
-      uid: this.props.navigation.getParam("uid", "000"),
-      name: this.props.navigation.getParam("name", "aaa")
-    });
+    dateNow = Date.now();
+    if (message.trim() != "") {
+      var messageListSenderRef = firebase
+        .database()
+        .ref("message_list")
+        .child(firebase.auth().currentUser.uid)
+        .child(this.props.navigation.getParam("uid", "000"));
+      var newMessageSenderRef = messageListSenderRef.push();
+      newMessageSenderRef.set({
+        text: message,
+        time: dateNow,
+        receiver: this.props.navigation.getParam("uid", "000"),
+        name: this.props.navigation.getParam("name", "aaa"),
+        sender: firebase.auth().currentUser.uid
+      });
+
+      var messageListReceiverRef = firebase
+        .database()
+        .ref("message_list")
+        .child(this.props.navigation.getParam("uid", "000"))
+        .child(firebase.auth().currentUser.uid);
+      var newMessageReceiverRef = messageListReceiverRef.push();
+      newMessageReceiverRef.set({
+        text: message,
+        time: dateNow,
+        receiver: this.props.navigation.getParam("uid", "000"),
+        name: this.props.navigation.getParam("name", "aaa"),
+        sender: firebase.auth().currentUser.uid
+      });
+    } else {
+      alert("Write a valid text");
+    }
     this.setState({
-      message: " "
+      message: ""
     });
     this.forceUpdate();
   };
@@ -84,11 +107,24 @@ export default class PrivateChatPage extends React.Component {
             paddingVertical: 5
           }}
         >
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.goBack();
+            }}
+          >
+            <Icon name="arrow-back" style={{ color: "#fff", marginLeft: 10 }} />
+          </TouchableOpacity>
           <Image
             source={{
               uri: this.props.navigation.getParam("image", "Nothing")
             }}
-            style={{ height: 50, width: 50, borderRadius: 50 }}
+            style={{
+              height: 40,
+              width: 40,
+              borderRadius: 50,
+              marginLeft: 5,
+              marginVertical: 5
+            }}
           />
           <Text style={{ color: "#fff", fontSize: 20, marginLeft: 10 }}>
             {this.props.navigation.getParam("name", "Nothing")}
@@ -104,36 +140,44 @@ export default class PrivateChatPage extends React.Component {
           enabled
         >
           <FlatList
+            style={{ paddingHorizontal: 10 }}
             data={this.state.messageList}
             inverted
             keyExtractor={(item, index) => item.time.toString()}
-            renderItem={({ item }) => (
-              <Card style={styles.listItem}>
-                <Text style={styles.messageText}>{item.text}</Text>
-                <Text style={styles.timeText}>
-                  {new Date(item.time).toLocaleDateString()}
-                </Text>
-              </Card>
-            )}
+            renderItem={({ item }) => {
+              if (item.sender === firebase.auth().currentUser.uid) {
+                return <SenderMessage data={item} />;
+              } else {
+                return <ReceiverMessage data={item} />;
+              }
+            }}
           />
           <View style={styles.inputContainer}>
             <Input
+              style={{ marginLeft: 10 }}
               placeholder="Enter Message"
+              placeholderTextColor="#c1c1c1"
               onChangeText={text => {
                 this.setState({ message: text });
               }}
               value={this.state.message}
             />
-            <Button
-              style={{ backgroundColor: "#128C7E" }}
-              rounded
-              icon
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#128C7E",
+                borderRadius: 50,
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 10,
+                height: 50,
+                width: 50
+              }}
               onPress={() => {
                 this.sendMessage(this.state.message);
               }}
             >
-              <Icon name="send" />
-            </Button>
+              <Icon name="send" style={{ color: "#fff" }} />
+            </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
       </View>
@@ -150,12 +194,10 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: "row",
-    padding: 5,
     borderRadius: 50,
     borderColor: "#fff",
     color: "#fff",
-    // position: "absolute",
-    // bottom: 5,
+    marginBottom: 5,
     backgroundColor: "#fff",
     marginHorizontal: 10
   },

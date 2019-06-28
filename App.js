@@ -5,6 +5,7 @@ import * as firebase from "firebase";
 import SignInPage from "./screens/SignInPage";
 import SignUpPage from "./screens/SignUpPage";
 import PrivateChatPage from "./screens/PrivateChatPage";
+import SettingsPage from "./screens/SettingsPage";
 
 var firebaseConfig = {
   apiKey: "AIzaSyA3IiXHr_8bmSO2LSsq4N48gkmZzAuxGRM",
@@ -23,7 +24,8 @@ const MainNavigator = createStackNavigator(
     Loading: { screen: LoadingPage },
     Signin: { screen: SignInPage },
     Signup: { screen: SignUpPage },
-    PrivateChat: { screen: PrivateChatPage }
+    PrivateChat: { screen: PrivateChatPage },
+    Settings: { screen: SettingsPage }
   },
   {
     // initialRouteName: "PrivateChat"

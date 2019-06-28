@@ -9,7 +9,7 @@ export default class ChatsPage extends React.Component {
     this.state = {
       chats: []
     };
-    self = this;
+    // self = this;
   }
 
   static navigationOptions = {
@@ -38,7 +38,11 @@ export default class ChatsPage extends React.Component {
       <View style={styles.container}>
         <FlatList
           data={this.state.chats}
-          renderItem={({ item }) => <UserChatItem name={item} />}
+          renderItem={({ item }) => {
+            if (item.uid !== firebase.auth().currentUser.uid) {
+              return <UserChatItem name={item} />;
+            }
+          }}
         />
       </View>
     );
