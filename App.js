@@ -12,7 +12,7 @@ var firebaseConfig = {
   authDomain: "reactnativewhatsapp.firebaseapp.com",
   databaseURL: "https://reactnativewhatsapp.firebaseio.com",
   projectId: "reactnativewhatsapp",
-  storageBucket: "",
+  storageBucket: "reactnativewhatsapp.appspot.com",
   messagingSenderId: "1075400460123",
   appId: "1:1075400460123:web:796658b858967297"
 };
@@ -28,7 +28,7 @@ const MainNavigator = createStackNavigator(
     Settings: { screen: SettingsPage }
   },
   {
-    // initialRouteName: "PrivateChat"
+    // initialRouteName: "Settings"
     initialRouteName: "Loading"
     // defaultNavigationOptions: {
     //   header: null

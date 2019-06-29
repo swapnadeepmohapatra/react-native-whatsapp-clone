@@ -35,6 +35,25 @@ export default class HomePage extends React.Component {
 
   _menu = null;
 
+  componentDidMount() {
+    firebase
+      .database()
+      .ref("Users")
+      .child(firebase.auth().currentUser.uid)
+      .child("status")
+      .set("Online");
+  }
+
+  async componentWillUnmount() {
+    alert("Closed");
+    await firebase
+      .database()
+      .ref("Users")
+      .child(firebase.auth().currentUser.uid)
+      .child("status")
+      .set("offline");
+  }
+
   setMenuRef = ref => {
     this._menu = ref;
   };
