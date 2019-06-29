@@ -62,7 +62,7 @@ export default class HomePage extends React.Component {
         }}
       >
         <View
-          backgroundColor="#128C7E"
+          backgroundColor="#00423b"
           style={{
             height: StatusBar.currentHeight
           }}
@@ -92,6 +92,7 @@ export default class HomePage extends React.Component {
               <MenuItem
                 onPress={() => {
                   this.props.navigation.navigate("PrivateChat");
+                  this._menu.hide();
                 }}
               >
                 New Group
@@ -99,6 +100,7 @@ export default class HomePage extends React.Component {
               <MenuItem
                 onPress={() => {
                   this.props.navigation.navigate("Settings");
+                  this._menu.hide();
                 }}
               >
                 Settings

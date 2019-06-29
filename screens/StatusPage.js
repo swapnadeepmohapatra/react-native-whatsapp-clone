@@ -16,7 +16,7 @@ export default class StatusPage extends React.Component {
     return (
       <View
         style={{
-          backgroundColor: "#1287A5",
+          backgroundColor: "#EA7773",
           //   backgroundColor: "#EA7773",
           flex: 1
         }}

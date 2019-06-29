@@ -94,7 +94,7 @@ export default class PrivateChatPage extends React.Component {
     return (
       <View style={{ flex: 1 }}>
         <View
-          backgroundColor="#128C7E"
+          backgroundColor="#00423b"
           style={{
             height: StatusBar.currentHeight
           }}

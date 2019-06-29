@@ -22,6 +22,7 @@ export default class LoadingPage extends React.Component {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="green" />
+        <Text>Loading...</Text>
       </View>
     );
   }
