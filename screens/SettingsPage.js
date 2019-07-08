@@ -88,7 +88,9 @@ export default class SettingsPage extends React.Component {
       xhr.send(null);
     });
 
-    const ref = storageRef.child(uuid.v4() + "." + fileExtenstion);
+    const ref = storageRef
+      .child(this.state.uid)
+      .child(uuid.v4() + "." + fileExtenstion);
     const snapshot = await ref.put(blob);
 
     this.setState({ imageChanged: true });
